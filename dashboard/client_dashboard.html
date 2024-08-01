@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard</title>
+    <style>
+    .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+        width: 350px;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    button{
+        width: 100%;
+        padding: 15px 20px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 3px;
+        font-size: 17px;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+    }
+    button:hover{
+        background-color: #0062cc;
+    }
+    button a{
+        color: white;
+        text-decoration: none;
+        transition: color 0.2s ease-in-out;
+        margin-bottom: 5px;
+    }
+    body.flex-container {
+        display: flex; 
+        justify-content: center;
+        align-items: center; 
+        min-height: 100vh; 
+}
+.logout-container{
+    text-align: right;
+}
+.logout-container button{
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 30%;
+}
+.logout-container button:hover{
+    background-color: #c82333;
+}
+    </style>
+</head>
+<body class="flex-container">
+    <div class="container">
+    <div class="logout-container">
+        <button onclick="logout()">Logout</button>
+
+    </div>
+        <h2>Client Dashboard</h2>
+        <button><a href="../bills/bills.html">Click to Submit Bill</a></button>
+    </div>
+    
+    <script>
+        function logout() {
+            fetch('logout.php')
+                .then(() => {
+                    window.location.href = '../login/index.html';
+                })
+                .catch(error => console.error('Error logging out:', error));
+        }
+    </script>
+</body>
+</html>

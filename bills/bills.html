@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Submission</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f2f2f2;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+        }
+    
+        .bill-container {
+          background-color: #fff;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          width: 300px;
+        }
+    
+        .bill-container h2 {
+          text-align: center;
+          margin-bottom: 20px;
+          color: #333;
+        }
+    
+        .bill-container label {
+          display: block;
+          margin-bottom: 8px;
+          color: #555;
+        }
+    
+        .bill-container input[type="text"],
+        .bill-container input[type="number"],
+        .bill-container input[type="date"],
+        .bill-container textarea {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 20px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          box-sizing: border-box;
+        }
+    
+        .bill-container input[type="submit"] {
+          width: 100%;
+          padding: 10px;
+          background-color: #007bff;
+          border: none;
+          border-radius: 4px;
+          color: white;
+          font-size: 16px;
+          cursor: pointer;
+        }
+    
+        .bill-container input[type="submit"]:hover {
+          background-color: #0056b3;
+        }
+    
+        .bill-container .error {
+          color: red;
+          text-align: center;
+          margin-bottom: 20px;
+        }
+    
+        /* Styles for the links section */
+        .links {
+          display: flex;
+          justify-content: space-between; /* Space links evenly */
+          margin-top: 15px; /* Add space above links */
+        }
+    
+        .bill-container a {
+          color: #333;
+          text-decoration: none;
+          transition: color 0.2s ease-in-out;
+        }
+    
+        .bill-container a:hover {
+          color: #007bff; /* Blue on hover for links */
+        }
+    
+        /* Additional styling for a button-like appearance */
+        .bill-container a {
+          display: inline-block;
+          padding: 8px 12px;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+    
+        .bill-container a:hover {
+          background-color: #e6e6e6; /* Slightly darker background on hover */
+        }
+</style>
+</head>
+<body>
+    <div class="bill-container">
+        <h2>Submit a Bill</h2>
+        <form id="billForm" action="submit_bill.php" method="POST" onsubmit="addCurrentTime()">
+          <label for="vendor_name">Vendor Name</label>
+          <input type="text" id="vendor_name" name="vendor_name" required>
+          
+          <label for="client_email">Your Email</label>
+          <input type="text" id="client_email" name="client_email" required>
+          
+          <label for="bill_date">Bill Date</label>
+          <input type="date" id="bill_date" name="bill_date" required>
+          
+          <label for="amount">Amount</label>
+          <input type="number" id="amount" name="amount" required>
+          
+          <label for="description">Description</label>
+          <textarea id="description" name="description" required></textarea>
+          
+          <input type="hidden" id="bill_time" name="bill_time">
+          
+          <input type="submit" value="Submit">
+          
+          <br>
+            <div class="links">  <a href="../registeration/register.html">Don't have an Account?</a></div>
+                <div><a href="../login/index.html">Already Have an Account?</a>
+              </div>
+              <div>
+                <a href="../status/status.html">Want To check your bill status?</a>
+              </div>
+        </form>
+    </div>
+    <script>
+      function addCurrentTime() {
+          const now = new Date();
+          const hours = now.getHours().toString().padStart(2, '0');
+          const minutes = now.getMinutes().toString().padStart(2, '0');
+          const seconds = now.getSeconds().toString().padStart(2, '0');
+          const currentTime = `${hours}:${minutes}:${seconds}`;
+          document.getElementById('bill_time').value = currentTime;
+      }
+  </script>
+</body>
+</html>

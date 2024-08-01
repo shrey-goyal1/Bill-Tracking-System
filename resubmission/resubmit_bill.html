@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resubmit Bill</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .bill-details {
+            display: none;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .Refresh{
+            text-align: right;
+        }
+        .back-to-home-page-container{
+            text-align: right;
+        }
+        .back-to-home-page-container button{
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Resubmit Bill</h2>
+        <div class="Refresh">
+            <button onclick="window.location.reload();">Refresh</button>
+        </div>
+        
+        <div class="form-group">
+            <label for="bill-id">Bill ID</label>
+            <input type="text" id="bill-id" required>
+        </div>
+        <div class="form-group">
+            <label for="bill-date">Date</label>
+            <input type="date" id="bill-date" required>
+        </div>
+        <button onclick="confirmBill()">Confirm</button>
+        
+        <div class="back-to-home-page-container">
+            <button onclick="backtohomepage()">Back To Home Page</button>
+        </div>
+
+        <div class="bill-details" id="bill-details">
+            <h3>Bill Details</h3>
+            <table>
+                <tr>
+                    <th>Vendor Name</th>
+                    <td><input type="text" id="vendor-name"></td>
+                </tr>
+                <tr>
+                    <th>Amount</th>
+                    <td><input type="text" id="amount"></td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td><input type="text" id="description"></td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td><input type="date" id="bill-date-detail"></td>
+                </tr>
+            </table>
+            <button onclick="editBill()">Save Changes</button>
+        </div>
+    </div>
+
+    <script>
+        function confirmBill() {
+            const billId = document.getElementById('bill-id').value;
+            const billDate = document.getElementById('bill-date').value;
+
+            fetch(`confirm_bill.php?bill_id=${billId}&bill_date=${billDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('vendor-name').value = data.bill.vendor_name;
+                        document.getElementById('amount').value = data.bill.amount;
+                        document.getElementById('description').value = data.bill.description;
+                        document.getElementById('bill-date-detail').value = data.bill.date;
+                        document.getElementById('bill-details').style.display = 'block';
+                    } else {
+                        alert('Bill not found');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function editBill() {
+            const billId = document.getElementById('bill-id').value;
+            const vendorName = document.getElementById('vendor-name').value;
+            const amount = document.getElementById('amount').value;
+            const description = document.getElementById('description').value;
+            const billDate = document.getElementById('bill-date-detail').value;
+
+            fetch('edit_bill.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    bill_id: billId,
+                    vendor_name: vendorName,
+                    amount: amount,
+                    description: description,
+                    date: billDate
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Bill resubmitted successfully.');
+                    window.location.reload();
+                } else {
+                    alert('Error resubmitting bill.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        function backtohomepage(){
+                window.location.href = '../login/index.html';
+            }
+    </script>
+</body>
+</html>

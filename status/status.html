@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Bill Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .links {
+            display: flex;
+            justify-content: space-between; 
+        }
+        .links a:hover{
+            color: blue;
+        }
+        .links a{
+            color: #333;
+            transition: color 0.2s ease-in-out;
+            text-decoration: none;
+            margin-bottom: 5px;  
+        }
+        .Refresh{
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Check Bill Status</h2>
+        <div class="Refresh">
+            <button onclick="window.location.reload()">Refresh</button>
+        </div>
+        <form id="status-form">
+            <label for="bill_id">Bill ID</label>
+            <input type="text" id="bill_id" name="bill_id" required>
+            <label for="bill_date">Date of Application</label>
+            <input type="date" id="bill_date" name="bill_date" required>
+            <button onclick="status()">Check Status</button>
+        </form>
+        <div id="status-result" class="status" style="display: none;"></div>
+        <br>
+        <hr>
+        <div class="links">  <a href="../registeration/register.html">Don't have an Account?</a>
+            <a href="../bills/bills.html">Want to submit a Bill?</a>
+          </div>
+          <div class="links" style="padding-left: 120px;">
+            <a href="../login/index.html">Login To your Account?</a>
+          </div>
+    </div>
+
+    <script>
+        function status(){
+            
+        document.getElementById('status-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const billId = document.getElementById('bill_id').value;
+            const bill_date = document.getElementById('bill_date').value;
+
+            fetch('check_status.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    bill_id: billId,
+                    bill_date: bill_date
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const statusResult = document.getElementById('status-result');
+                statusResult.style.display = 'block';
+                if (data.error) {
+                    statusResult.textContent = data.error;
+                } else {
+                    statusResult.textContent = data.status;
+                }
+            })
+            .catch(error => {
+                console.error('Error checking status:', error);
+            });
+        });
+    }
+    </script>
+</body>
+</html>

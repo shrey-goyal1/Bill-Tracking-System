@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superuser Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .tab-container button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .tab-container button.active {
+            background-color: #0056b3;
+        }
+
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: white;
+            text-align: center;
+        }
+
+        .status.approved {
+            background-color: green;
+        }
+
+        .status.pending {
+            background-color: orange;
+        }
+
+        .status.rejected {
+            background-color: red;
+        }
+
+        .logout-container {
+            text-align: right;
+        }
+
+        .logout-container button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <h2>Superuser Dashboard</h2>
+        <div class="tab-container">
+            <div><button onclick="window.location.reload()">Refresh</button></div>
+            <button id="bill-details-tab" class="active" onclick="showContent('bill-details')">Bill Details</button>
+            <button id="finished-bill-details-tab" onclick="showContent('finished-bill-details')">Finished Bill Details</button>
+            <button id="users-tab" onclick="showContent('users')">Users</button>
+            <button id="new-users-tab" onclick="showContent('new-users')">New Users</button>
+            <button id ="rejected-bill-details-tab" onclick="showContent('rejected-bill-details')">Rejected Bills</button>
+            <a href="finished_bills_dashboard.html"><button>All Finished Bills</button></a>
+            <div class="logout-container"><button onclick="logout()">Logout</button></div>
+        </div>
+        
+        <div id="bill-details" class="content active">
+            <h3>Bill Details</h3>   
+            <table id="bill-table">
+                <thead>
+                    <tr>
+                        <th>Bill ID</th>
+                        <th>Vendor Name</th>
+                        <th>Date</th>
+                        <th>Department Decision</th>
+                        <th>Unit Decision</th>
+                        <th>Accounts Decision</th>
+                        <th>Final Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Bill rows will be shown here -->
+                </tbody>
+            </table>
+        </div>
+        <div id="rejected-bill-details" class="content">
+            <h3>Rejected Bill Details</h3>   
+            <table id="rejected-bill-table">
+                <thead>
+                    <tr>
+                        <th>Bill ID</th>
+                        <th>Vendor Name</th>
+                        <th>Bill Date</th>
+                        <th>Date</th>
+                        <th>Department Decision</th>
+                        <th>Unit Decision</th>
+                        <th>Accounts Decision</th>
+                        <th>Final Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Bill rows will be shown here -->
+                </tbody>
+            </table>
+        </div>
+
+        
+        <div id="finished-bill-details" class="content">
+            <h3>Finished Bill Details</h3>
+            <table id="new-finished-table">
+                <thead>
+                    <tr>
+                        <th>Bill ID</th>
+                        <th>Vendor Name</th>
+                        <th>Date</th>
+                        <th>Department Decision</th>
+                        <th>Unit Decision</th>
+                        <th>Accounts Decision</th>
+                        <th>Final Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- New user rows will be shown here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="users" class="content">
+            
+            <h3>User Details</h3>
+            <table id="user-table">
+                <thead>
+                    <tr>
+                        <th>Head ID</th>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Phone Number</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- User details will be shown here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="new-users" class="content">
+
+            <h3>New Users</h3>
+            <table id="new-user-table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Phone Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- New user details will be shown here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            
+            fetchBillDetails();
+            fetchRejectedBillDetails();
+            fetchFinishedBillDetails();
+            fetchUserDetails();
+            fetchNewUserDetails();
+        });
+
+        function showContent(contentId) {
+            document.querySelectorAll('.content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-container button').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(contentId).classList.add('active');
+            document.getElementById(`${contentId}-tab`).classList.add('active');
+        }
+
+        function fetchBillDetails() {
+            fetch('fetch_all_bills.php')
+                .then(response => response.json())
+                .then(data => populateBillTable(data))
+                .catch(error => console.error('Error fetching bills:', error));
+        }
+        function populateBillTable(bills) {
+            const table = document.getElementById('bill-table').querySelector('tbody');
+            table.innerHTML = '';
+
+            bills.forEach(bill => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${bill.bill_id}</td>
+                    <td>${bill.vendor_name}</td>
+                    <td>${bill.Date}</td>
+                    <td>${bill.department_decision}</td>
+                    <td>${bill.unit_decision}</td>
+                    <td>${bill.accounts_decision}</td>
+                    <td><span class="status ${getFinalStatus(bill)}">${getFinalStatus(bill)}</span></td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+
+        function fetchRejectedBillDetails() {
+            fetch('fetch_rejected_bills.php')
+                .then(response => response.json())
+                .then(data => populateRejectedBillTable(data))
+                .catch(error => console.error('Error fetching bills:', error));
+        }
+        function populateRejectedBillTable(bills) {
+            const table = document.getElementById('rejected-bill-table').querySelector('tbody');
+            table.innerHTML = '';
+
+            bills.forEach(bill => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${bill.bill_id}</td>
+                    <td>${bill.vendor_name}</td>
+                    <td>${bill.bill_date}</td>
+                    <td>${bill.date}</td>
+                    <td>${bill.department_decision}</td>
+                    <td>${bill.unit_decision}</td>
+                    <td>${bill.accounts_decision}</td>
+                    <td><span class="status ${getFinalStatus(bill)}">${getFinalStatus(bill)}</span></td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        function fetchFinishedBillDetails(){
+            fetch('fetch_all_finished_bills.php')
+            .then(response => response.json())
+            .then(data => populateFinishedBillTable(data))
+            .catch(error => console.error('Error fetching bills :' , error));
+        }
+
+        function populateFinishedBillTable(bills){
+            const table = document.getElementById('new-finished-table').querySelector('tbody');
+            table.innerHTML = '';
+
+            bills.forEach(bill => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${bill.bill_id}</td>
+                    <td>${bill.vendor_name}</td>
+                    <td>${bill.date}</td>
+                    <td>${bill.department_decision}</td>
+                    <td>${bill.unit_decision}</td>
+                    <td>${bill.accounts_decision}</td>
+                    <td><span class="status ${getFinalStatus(bill)}">${getFinalStatus(bill)}</span></td>
+                    <td><button onclick="changeDecision(${bill.bill_id})">Change Decision</button></td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        function getFinalStatus(bill) {
+            if (bill.department_decision === 'Rejected' || bill.unit_decision === 'Rejected' || bill.accounts_decision === 'Rejected') {
+                return 'rejected';
+            } else if (bill.department_decision === 'Pending' || bill.unit_decision === 'Pending' || bill.accounts_decision === 'Pending') {
+                return 'pending';
+            } else {
+                return 'approved';
+            }
+        }
+
+        function changeDecision(billId) {
+            const whome = prompt('Enter which one you have to change?');
+            if (whome ==='Department'|| whome ==='department'|| whome ==='dept'){
+                const newDecision = prompt('Enter new decision (Approved/Rejected/Pending):');
+                if (newDecision === 'Approved' || newDecision === 'Rejected' || newDecision === 'Pending') {
+                    fetch('update_department_bill_decision.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            bill_id: billId,
+                            new_decision: newDecision
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Decision updated successfully.');
+                            fetchFinishedBillDetails();
+                        } else {
+                            alert('Error updating decision.');
+                        }
+                    })
+                    .catch(error => console.error('Error updating decision:', error));
+                } else {
+                    alert('Invalid decision. Please enter either "Approved" or "Rejected" or "Pending".');
+                }
+            }
+            else if (whome ==='Unit'|| whome ==='unit'){
+                    const newDecision = prompt('Enter new decision (Approved/Rejected/Pending):');
+                    if (newDecision === 'Approved' || newDecision === 'Rejected' || newDecision === 'Pending') {
+                        fetch('update_unit_bill_decision.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                bill_id: billId,
+                                new_decision: newDecision
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Decision updated successfully.');
+                                fetchFinishedBillDetails();
+                            } else {
+                                alert('Error updating decision.');
+                            }
+                        })
+                        .catch(error => console.error('Error updating decision:', error));
+                    } else {
+                        alert('Invalid decision. Please enter either "Approved" or "Rejected" or "Pending".');
+                    }
+            }
+            else if (whome ==='Accounts'|| whome ==='accounts'|| whome==='acc'|| whome==='account'|| whome==='Account'){
+                    const newDecision = prompt('Enter new decision (Approved/Rejected/Pending):');
+                    if (newDecision === 'Approved' || newDecision === 'Rejected' || newDecision === 'Pending') {
+                        fetch('update_accounts_bill_decision.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                bill_id: billId,
+                                new_decision: newDecision
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Decision updated successfully.');
+                                fetchFinishedBillDetails();
+                            } else {
+                                alert('Error updating decision.');
+                            }
+                        })
+                        .catch(error => console.error('Error updating decision:', error));
+                    } else {
+                        alert('Invalid decision. Please enter either "Approved" or "Rejected".');
+                    }
+
+                }
+            else{
+                alert('Invalid decision. Please enter either "Department" or "Unit" or "Accounts".');
+            }
+    }
+    
+    function fetchUserDetails() {
+        fetch('fetch_all_users.php')
+            .then(response => response.json())
+            .then(data => populateUserTable(data))
+            .catch(error => console.error('Error fetching users:', error));
+    }
+
+
+     function populateUserTable(users) {
+            const table = document.getElementById('user-table').querySelector('tbody');
+            table.innerHTML = '';
+
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.head_id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.full_name}</td>
+                    <td>${user.contact_number}</td>
+                    <td>${user.role}</td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        function changePermission(headId) {
+            const perm = prompt('Enter new permission (superuser, department_head, unit_head, accounts_head, client):');
+            if (['superuser', 'department_head', 'unit_head', 'accounts_head', 'client'].includes(perm)) {
+                fetch('change_permission.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        head_id: headId,
+                        role: perm
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Permission updated successfully.');
+                        fetchUserDetails();
+                    } else {
+                        alert('Error updating permission.');
+                    }
+                })
+                .catch(error => console.error('Error updating permission:', error));
+            } else {
+                alert('Invalid permission. Please enter either "superuser", "department_head", "unit_head", "accounts_head", or "client".');
+            }
+        }
+
+        function fetchNewUserDetails() {
+            fetch('fetch_all_new_users.php')
+                .then(response => response.json())
+                .then(data => populateNewUserTable(data))
+                .catch(error => console.error('Error fetching new users:', error));
+        }
+
+        function populateNewUserTable(newUsers) {
+            const table = document.getElementById('new-user-table').querySelector('tbody');
+            table.innerHTML = '';
+
+            newUsers.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.u_id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.full_name}</td>
+                    <td>${user.contact_number}</td>
+                    <td><button onclick="changeNewUserPermission(${user.u_id})">Permissions</button></td>
+                `;
+                table.appendChild(row);
+            });
+        }
+        
+        function changeNewUserPermission(userId) {
+            const perm = prompt('Enter new permission (superuser, department_head, unit_head, accounts_head, client , delete):');
+            if (['superuser', 'department_head', 'unit_head', 'accounts_head', 'client' , 'delete'].includes(perm)) {
+                fetch('change_new_user_permission.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        u_id: userId,
+                        role: perm
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Permission updated successfully.');
+                        fetchNewUserDetails();
+                    } else {
+                        alert('Error updating permission.');
+                    }
+                })
+                .catch(error => console.error('Error updating permission:', error));
+            } else {
+                alert('Invalid permission. Please enter either "superuser", "department_head", "unit_head", "accounts_head", or "client" , "delete".');
+            }
+        }
+
+    function logout(){
+        fetch('../logout/logout.php')
+        .then(() => {
+            window.location.href = '../login/index.html';
+        })
+        .catch(error => console.error('Error logging out:', error));
+    }
+    </script>
+</body>
+</html>
