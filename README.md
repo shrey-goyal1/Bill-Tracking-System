@@ -34,10 +34,10 @@ The Bill Tracking System is a comprehensive web application developed to streaml
    - Start XAMPP and navigate to `http://localhost/bill-tracking-system` in your browser.
 
 ## Usage
-- Login: Use the provided credentials to log in as a Department Head, Unit Head, Accounts Head, or Superuser.
-- Dashboard Navigation: Access your dashboard to view, approve, or reject bills.
-- Bill Submission: Submit new bills via the submission form. Track the status of your submitted bills through the dashboard.
-- Notifications: Receive email notifications for any updates on the bills.
+- **Login**: Use the provided credentials to log in as a Department Head, Unit Head, Accounts Head, or Superuser.
+- **Dashboard Navigation**: Access your dashboard to view, approve, or reject bills.
+- **Bill Submission**: Submit new bills via the submission form. Track the status of your submitted bills through the dashboard.
+- **Notifications**: Receive email notifications for any updates on the bills.
 
 ## Contributing
 Contributions are welcome! Please fork the repository and submit a pull request with your changes.
@@ -46,5 +46,5 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 This project is licensed under the MIT License.
 
 ## Contact
-For any questions or further information, please contact [Your Name] at [Your Email Address].
+For any questions or further information, please contact **Shrey Goyal** at **shreygoyal717@gmail.com**.
 
